@@ -6,12 +6,14 @@ namespace grading
 {
     class LinksCacheGrader : public SearchResultGrader
     {
-    private:
-        std::shared_ptr<LinksCache> m_cache;
+    protected:
+        LinksCache* m_cache;
 
     public:
-        int grade(const std::vector<std::string> &links) const override;
-        virtual int
+        LinksCacheGrader(LinksCache* cache);
+        double grade(const std::vector<std::string> &links) const override;
+        virtual double
         gradeInterestingLinks(const std::vector<std::string> &links) const = 0;
+        virtual ~LinksCacheGrader() = default;
     };
-} // namespace grading
+}

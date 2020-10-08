@@ -12,12 +12,15 @@ include_directories(${CMAKE_SOURCE_DIR}/grade)
 include_directories(${CMAKE_SOURCE_DIR}/search)
 include_directories(${CMAKE_SOURCE_DIR}/grade/cache-grading)
 include_directories(${CMAKE_SOURCE_DIR}/grade/cache-grading/links-cache)
+include_directories(${CMAKE_SOURCE_DIR}/grade/cache-grading/webpage-grading)
+include_directories(${CMAKE_SOURCE_DIR}/grade/cache-grading/webpage-grading/open-url)
 
 
 link_directories(${CMAKE_SOURCE_DIR})
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "./bin")
-add_executable(a.out main.cpp grade/cache-grading/links-cache/LinksTextCache.cpp grade/cache-grading/links-cache/split.cpp)
+add_executable(a.out main.cpp grade/cache-grading/links-cache/LinksTextCache.cpp grade/cache-grading/links-cache/split.cpp grade/cache-grading/webpage-grading/WebPageGrader.cpp
+grade/cache-grading/LinksCacheGrader.cpp)
 
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
