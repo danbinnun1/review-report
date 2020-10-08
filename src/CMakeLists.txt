@@ -20,7 +20,7 @@ link_directories(${CMAKE_SOURCE_DIR})
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "./bin")
 add_executable(a.out main.cpp grade/cache-grading/links-cache/LinksTextCache.cpp grade/cache-grading/links-cache/split.cpp grade/cache-grading/webpage-grading/WebPageGrader.cpp
-grade/cache-grading/LinksCacheGrader.cpp)
+grade/cache-grading/LinksCacheGrader.cpp grade/cache-grading/webpage-grading/AskReviewType.cpp)
 
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})

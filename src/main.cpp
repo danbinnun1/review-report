@@ -1,5 +1,6 @@
 #include "LinksTextCache.hpp"
 #include "LinksCache.hpp"
+#include "AskReviewType.hpp"
 #include <iostream>
 int main(){
     std::string file="f.txt";
@@ -7,4 +8,6 @@ int main(){
     cache->insertLink("aab");
     std::cout<<cache->linkInCache("tttt")<<"\n"<<cache->linkInCache("aab")<<std::endl;
     delete cache;
+    grading::askUser();
+
 }
