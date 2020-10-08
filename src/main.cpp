@@ -1,13 +1,16 @@
 #include "LinksTextCache.hpp"
 #include "LinksCache.hpp"
 #include "AskReviewType.hpp"
+#include "LinuxURLOpener.hpp"
+#include "URLOpener.hpp"
 #include <iostream>
+#include "SearchResultGrader.hpp"
+#include "WebPageGrader.hpp"
+using namespace grading;
 int main(){
-    std::string file="f.txt";
-    grading::LinksCache* cache =new grading::LinksTextCache(file);
-    cache->insertLink("aab");
-    std::cout<<cache->linkInCache("tttt")<<"\n"<<cache->linkInCache("aab")<<std::endl;
-    delete cache;
-    grading::askUser();
-
+    SearchResultGrader* a= new WebPageGrader(new LinuxURLOpener(), new LinksTextCache("a.txt"));
+    std::string s1="http//:youtube.com";
+    std::string s2="http//:google.com";
+    std::vector<std::string> b={s1, s2};
+    //std::cout<<a->grade(b);
 }

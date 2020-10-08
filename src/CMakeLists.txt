@@ -19,9 +19,16 @@ include_directories(${CMAKE_SOURCE_DIR}/grade/cache-grading/webpage-grading/open
 link_directories(${CMAKE_SOURCE_DIR})
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "./bin")
-add_executable(a.out main.cpp grade/cache-grading/links-cache/LinksTextCache.cpp grade/cache-grading/links-cache/split.cpp grade/cache-grading/webpage-grading/WebPageGrader.cpp
-grade/cache-grading/LinksCacheGrader.cpp grade/cache-grading/webpage-grading/AskReviewType.cpp)
 
+set(CURL_LIBRARY "-lcurl") 
+find_package(CURL REQUIRED) 
+
+
+add_executable(a.out main.cpp grade/cache-grading/links-cache/LinksTextCache.cpp grade/cache-grading/links-cache/split.cpp grade/cache-grading/webpage-grading/WebPageGrader.cpp
+grade/cache-grading/LinksCacheGrader.cpp grade/cache-grading/webpage-grading/AskReviewType.cpp grade/cache-grading/webpage-grading/open-url/LinuxURLOpener.cpp)
+
+include_directories(${CURL_INCLUDE_DIR})
+target_link_libraries(a.out ${CURL_LIBRARIES})
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
