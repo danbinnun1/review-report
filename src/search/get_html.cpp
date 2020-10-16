@@ -12,7 +12,7 @@
 #define HEADER_USER_AGENT "User-Agent:Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.70 Safari/537.17"
  
 
-std::string get_html(const std::string &url)
+std::string search::get_html(const std::string &url)
 {
     curlpp::Easy request;
  
