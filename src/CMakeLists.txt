@@ -14,6 +14,7 @@ include_directories(${CMAKE_SOURCE_DIR}/grade/cache-grading)
 include_directories(${CMAKE_SOURCE_DIR}/grade/cache-grading/links-cache)
 include_directories(${CMAKE_SOURCE_DIR}/grade/cache-grading/webpage-grading)
 include_directories(${CMAKE_SOURCE_DIR}/grade/cache-grading/webpage-grading/open-url)
+include_directories(${CMAKE_SOURCE_DIR}/searching_data_parser)
 
 
 link_directories(${CMAKE_SOURCE_DIR})
@@ -30,7 +31,7 @@ pkg_check_modules(LIBXMLXX REQUIRED IMPORTED_TARGET libxml++-2.6)
 
 add_executable(a.out main.cpp grade/cache-grading/links-cache/LinksTextCache.cpp grade/cache-grading/links-cache/split.cpp grade/cache-grading/webpage-grading/WebPageGrader.cpp
 grade/cache-grading/LinksCacheGrader.cpp grade/cache-grading/webpage-grading/AskReviewType.cpp grade/cache-grading/webpage-grading/open-url/LinuxURLOpener.cpp 
-search/get_html.cpp search/extract_links.cpp search/google_search.cpp)
+search/get_html.cpp search/extract_links.cpp search/google_search.cpp searching_data_parser/CsvParser.cpp searching_data_parser/file_reading.cpp)
 
 include_directories("/usr/include/libxml++-2.6/libxml++")
 target_link_libraries(a.out PkgConfig::LIBXMLXX)
