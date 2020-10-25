@@ -34,3 +34,4 @@ std::vector<Column> MapTable<Row, Column, Value>::get_columns() const {
 }
 
 template class MapTable<std::string,std::string,std::string>;
+template class MapTable<std::string,std::string,std::vector<std::string>>;
