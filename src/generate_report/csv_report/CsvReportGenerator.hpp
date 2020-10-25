@@ -1,6 +1,7 @@
 #pragma once
 #include "ReportGenerator.hpp"
 #include "Table.hpp"
+#include "report_data.hpp"
 #include <iostream>
 
 namespace report
@@ -9,8 +10,14 @@ namespace report
     {
 
     public:
+    /**
+     * @brief generates csv report
+     * 
+     * @param output_file the path for the report to be generated
+     * @param data the data of all past weeks
+     */
         void
         generate_report(const std::string &output_file,
-                        const Table<std::string, std::string, std::vector<std::string>>& data) const override;
+                        const history_reports_data& data) const override;
     };
 } // namespace report

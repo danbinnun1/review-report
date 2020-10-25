@@ -8,7 +8,7 @@
 #define NO_VALUE ""
 
 void report::CsvReportGenerator::generate_report(const std::string &output_file,
-                                                 const Table<std::string, std::string, std::vector<std::string>> &data) const
+                                                 const history_reports_data &data) const
 {
     std::ofstream output_stream;
     output_stream.open(output_file);

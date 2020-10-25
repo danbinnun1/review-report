@@ -1,19 +1,31 @@
 #pragma once
 #include <string>
 #include <vector>
-#include <map>
+#include "Table.hpp"
+#include <memory>
+
+#define DATABASE_PATH "a"
 
 /**
  * @brief initializes new sqlite file. if it alreadt exists it does nothing
  * 
  * @param filepath the path of the file
  */
-void initialize_database(const std::string& filepath);
+void initialize_database();
 
 /**
  * @brief Get the past data from the database
  * 
  * @param filepath darabase filepath
- * @return map that maps from pair of product and language, to vector of results in past
+ * @return table of products rows, languages columns, and the ratings the product in the language in the value,
+ * if value is blank it means there is no data for it
  */
-std::map<std::pair<std::string, std::string>, std::vector<std::string>> get_past_data(const std::string& filepath);
+std::unique_ptr<history_reports_data> get_past_data();
+
+/**
+ * @brief insert new data to database
+ * 
+ * @param data table that maps between product and language to value, if there is no value it should be blank
+ * @param filepath database file path
+ */
+void insert_new_data(const Table<std::string, std::string, std::string>& data);

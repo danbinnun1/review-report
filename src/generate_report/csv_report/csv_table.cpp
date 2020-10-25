@@ -3,7 +3,7 @@
 #define COMMA ","
 #define NEWLINE "\n"
 
-void insert_csv_table(std::ofstream& csv_file_stream, const Table<std::string, std::string, std::string>& table){
+void insert_csv_table(std::ofstream& csv_file_stream, const report_data& table){
     const auto rows=table.get_rows();
     const auto columns=table.get_columns();
     for (const std::string& column:columns ){
