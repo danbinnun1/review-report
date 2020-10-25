@@ -1,10 +1,22 @@
 #pragma once
+#include "Table.hpp"
 #include <string>
-template <class T>
-class ReportGenerator
+#include <vector>
+namespace report
 {
+    class ReportGenerator
+    {
 
-public:
-    virtual void generate_report(const std::string& output_file, const T& data) const = 0;
-    virtual ~ReportGenerator() = default;
-};
+    public:
+        /**
+     * @brief generates review report
+     * 
+     * @param output_file output file path for the report to be 
+     * @param data data of the report to be processed
+     */
+        virtual void
+        generate_report(const std::string &output_file,
+                        const Table<std::string, std::string, std::vector<std::string>>& data) const = 0;
+        virtual ~ReportGenerator() = default;
+    };
+} // namespace report

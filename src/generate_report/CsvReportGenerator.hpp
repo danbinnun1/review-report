@@ -1,11 +1,16 @@
 #pragma once
 #include "ReportGenerator.hpp"
-#include <map>
+#include "Table.hpp"
+#include <iostream>
 
-template <class T>
-    class CsvReportGenerator : public ReportGenerator <std::map<std::pair<std::string, std::string>, T>>
+namespace report
 {
+    class CsvReportGenerator : public ReportGenerator
+    {
 
-public:
-    virtual void generate_report(const std::string &output_file, const std::map<std::pair<std::string, std::string>, T> &data) const = 0;
-};
+    public:
+        void
+        generate_report(const std::string &output_file,
+                        const Table<std::string, std::string, std::vector<std::string>>& data) const override;
+    };
+} // namespace report
