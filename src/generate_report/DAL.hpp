@@ -3,6 +3,7 @@
 #include <vector>
 #include "Table.hpp"
 #include <memory>
+#include "report_data.hpp"
 
 #define DATABASE_PATH "a"
 

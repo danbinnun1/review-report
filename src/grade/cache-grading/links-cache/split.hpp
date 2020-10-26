@@ -5,3 +5,5 @@
 
 std::vector<std::string> splitByDelimiter(const char* str,
                                           const char delimiter);
+
+std::vector<std::string> splitRows(const std::string& str);
