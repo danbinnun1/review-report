@@ -1,5 +1,5 @@
 #include "insert_data.hpp"
-#include "DAL.hpp"
+#include "DBRanking.hpp"
 
 void report::insert_data(const std::string &report_path, const report::ReportGenerator &reportGenerator, const report_data &data)
 {
