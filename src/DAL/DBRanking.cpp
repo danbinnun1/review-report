@@ -1,9 +1,9 @@
 #include "DBRanking.hpp"
-
-#define DATABASE_PATH "a" 
+#include "DBPath.hpp"
+#include "unqlite.h"
 
 void initialize_database(){
-
+    
 }
 
 std::unique_ptr<history_reports_data> get_past_data(){

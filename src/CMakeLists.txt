@@ -19,7 +19,8 @@ include_directories(${CMAKE_SOURCE_DIR}/generate_report)
 include_directories(${CMAKE_SOURCE_DIR}/generate_report/csv_report)
 include_directories(${CMAKE_SOURCE_DIR}/generate_report/table)
 include_directories(${CMAKE_SOURCE_DIR}/DAL)
-
+include_directories(${CMAKE_SOURCE_DIR}/DAL/unqlite)
+link_directories(${CMAKE_SOURCE_DIR}/DAL/unqlite)
 
 link_directories(${CMAKE_SOURCE_DIR})
 #link_directories(/usr/local/Cellar/curlpp/0.8.1/lib/)
@@ -47,6 +48,8 @@ include_directories(${CURL_INCLUDE_DIR})
 target_link_libraries(a.out ${CURL_LIBRARIES})
 target_link_libraries (a.out ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries(a.out curlpp)
+target_link_libraries(a.out libunqlite.a)
+#target_link_libraries(a.out pthread)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})

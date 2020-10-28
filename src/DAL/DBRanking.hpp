@@ -1,11 +1,6 @@
 #pragma once
-#include <string>
-#include <vector>
-#include "Table.hpp"
 #include <memory>
 #include "report_data.hpp"
-
-#define DATABASE_PATH "a"
 
 /**
  * @brief initializes new sqlite file. if it alreadt exists it does nothing
