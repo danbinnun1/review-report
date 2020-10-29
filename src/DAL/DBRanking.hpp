@@ -3,13 +3,6 @@
 #include "report_data.hpp"
 
 /**
- * @brief initializes new sqlite file. if it alreadt exists it does nothing
- * 
- * @param filepath the path of the file
- */
-void initialize_database();
-
-/**
  * @brief Get the past data from the database
  * 
  * @param filepath darabase filepath
