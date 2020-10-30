@@ -45,12 +45,19 @@ void create_database(const std::map<std::string, std::vector<std::string>> &sear
         "   print db_errlog();"
         "   return;"
         "}"
-        "db_store($zCol, $" +
-        SEARCH_DATA_VAR_NAME + ");"
-        "if (!$rc) {"
-        "   print db_errorlog();"
-        "    return;"
-        "}";
+        "print \"12345\";"
+        "print $"+SEARCH_DATA_VAR_NAME+";"
+        "$insert=function($value, $key){"
+        "   $data = {$key : $value};"
+        "   $rc = db_store('"+SEARCH_DATA_SCHEMA+"', $data);"
+        "   if (!$rc){"
+        "       print db_errlog();"
+        "   }"
+        "   print $data;"
+        "};"
+        
+
+        "array_walk($"+SEARCH_DATA_VAR_NAME+", $insert);";
     rc = unqlite_compile(pDb, jx9_script.c_str(), jx9_script.size(), &pVm);
     if (rc != UNQLITE_OK)
     {
@@ -63,6 +70,7 @@ void create_database(const std::map<std::string, std::vector<std::string>> &sear
         }
         Fatal(0, "Jx9 compile error");
     }
+    unqlite_vm_config(pVm,UNQLITE_VM_CONFIG_OUTPUT,VmOutputConsumer,0);
     unqlite_value *insertion_data = get_unqlite_array(searching_data, pVm);
     rc = unqlite_vm_config(
         pVm,
