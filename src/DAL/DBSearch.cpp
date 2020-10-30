@@ -48,7 +48,7 @@ void create_database(const std::map<std::string, std::vector<std::string>> &sear
         "print \"12345\";"
         "print $"+SEARCH_DATA_VAR_NAME+";"
         "$insert=function($value, $key){"
-        "   $data = {$key : $value};"
+        "   $data = {'product':$key, 'languages' : $value};"
         "   $rc = db_store('"+SEARCH_DATA_SCHEMA+"', $data);"
         "   if (!$rc){"
         "       print db_errlog();"
