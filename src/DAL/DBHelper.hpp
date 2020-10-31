@@ -4,6 +4,8 @@
 #include <vector>
 #include <map>
 
-int VmOutputConsumer(const void *pOutput, unsigned int nOutLen, void *pUserData);
+int vmOutputConsumer(const void *pOutput, unsigned int nOutLen, void *pUserData);
 
-void Fatal(unqlite *pDb, const char *zMsg);
+void fatal(unqlite *pDb, const char *zMsg);
+
+void handle_jx9_compilation_error(unqlite* pDb);

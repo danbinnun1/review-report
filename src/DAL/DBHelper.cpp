@@ -1,6 +1,6 @@
 #include "DBHelper.hpp"
 
-void Fatal(unqlite *pDb, const char *zMsg)
+void fatal(unqlite *pDb, const char *zMsg)
 {
     if (pDb)
     {
@@ -23,6 +23,17 @@ void Fatal(unqlite *pDb, const char *zMsg)
     exit(0);
 }
 
+void handle_jx9_compilation_error(unqlite *pDb)
+{
+    const char *zBuf;
+    int iLen;
+    unqlite_config(pDb, UNQLITE_CONFIG_JX9_ERR_LOG, &zBuf, &iLen);
+    if (iLen > 0)
+    {
+        puts(zBuf);
+    }
+    fatal(0, "Jx9 compile error");
+}
 
 #ifdef __WINNT__
 #include <Windows.h>
@@ -33,7 +44,7 @@ void Fatal(unqlite *pDb, const char *zMsg)
 #define STDOUT_FILENO 1
 #endif
 
-int VmOutputConsumer(const void *pOutput, unsigned int nOutLen, void *pUserData /* Unused */)
+int vmOutputConsumer(const void *pOutput, unsigned int nOutLen, void *pUserData /* Unused */)
 {
 #ifdef __WINNT__
     BOOL rc;
