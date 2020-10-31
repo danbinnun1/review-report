@@ -24,24 +24,6 @@ void Fatal(unqlite *pDb, const char *zMsg)
 }
 
 
-int append_string_to_vector(unqlite_value* pKey, unqlite_value* pData, void* pUserData){
-    std::vector<std::string>* vec=static_cast<std::vector<std::string>*>(pUserData);
-    const char* zData;
-    zData=unqlite_value_to_string(pData, NULL);
-    vec->push_back(std::string(zData));
-    return UNQLITE_OK;
-}
-
-int append_vector_to_map(unqlite_value* pKey, unqlite_value* pData, void* pUserData){
-    std::map<std::string, std::vector<std::string>>* map=static_cast<std::map<std::string, std::vector<std::string>>*>(pUserData);
-    const char* zKey;
-    zKey=unqlite_value_to_string(pKey, NULL);
-    std::vector<std::string> vec;
-    unqlite_array_walk(pData,append_string_to_vector, static_cast<void*>(&vec));
-    map->insert(std::make_pair(std::string(zKey), vec));
-    return UNQLITE_OK;
-}
-
 #ifdef __WINNT__
 #include <Windows.h>
 #else

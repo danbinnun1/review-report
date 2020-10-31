@@ -9,9 +9,11 @@
 #define SEARCH_DATA_SCHEMA "search"
 #define SEARCH_DATA_VAR_NAME "searchData"
 
+static int append_string_to_vector(unqlite_value* pKey, unqlite_value* pData, void* pUserData);
 
 static unqlite_value *get_unqlite_array(const std::map<std::string, std::vector<std::string>> &searching_data, unqlite_vm *pVm);
 
+static int append_record_to_map(unqlite_value* pKey, unqlite_value* pData, void* pUserData);
 
 inline bool file_exists(const std::string& name) {
   struct stat buffer;   
@@ -107,7 +109,7 @@ std::map<std::string, std::vector<std::string>> get_searching_data()
     }
     unqlite_vm_exec(pVm);
     unqlite_value* data=unqlite_vm_extract_variable(pVm, SEARCH_DATA_VAR_NAME);
-    unqlite_array_walk(data,append_vector_to_map,static_cast<void*>(&result));
+    unqlite_array_walk(data,append_record_to_map,static_cast<void*>(&result));
     unqlite_vm_release_value(pVm, data);
     unqlite_vm_release(pVm);
     unqlite_close(pDb);
@@ -145,3 +147,25 @@ static unqlite_value *get_unqlite_array(const std::map<std::string, std::vector<
     return map;
 }
 
+#define PRODUCT "product"
+#define LANGUAGES "languages"
+
+static int append_record_to_map(unqlite_value* pKey, unqlite_value* pData, void* pUserData){
+    unqlite_value* product=unqlite_array_fetch(pData, PRODUCT, sizeof(PRODUCT)-1);
+    std::string product_name=std::string(unqlite_value_to_string(product, NULL));
+    unqlite_value* languages=unqlite_array_fetch(pData,LANGUAGES, sizeof(LANGUAGES)-1);
+    std::vector<std::string> languages_vec;
+    unqlite_array_walk(languages,append_string_to_vector,static_cast<void*>(&languages_vec));
+    std::map<std::string, std::vector<std::string>>* map=static_cast<std::map<std::string, std::vector<std::string>>*>(pUserData);
+    
+    map->insert(std::make_pair(product_name, languages_vec));
+    return UNQLITE_OK;
+}
+
+static int append_string_to_vector(unqlite_value* pKey, unqlite_value* pData, void* pUserData){
+    std::vector<std::string>* vec=static_cast<std::vector<std::string>*>(pUserData);
+    const char* zData;
+    zData=unqlite_value_to_string(pData, NULL);
+    vec->push_back(std::string(zData));
+    return UNQLITE_OK;
+}
