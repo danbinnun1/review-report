@@ -40,27 +40,23 @@ void create_database(const std::map<std::string, std::vector<std::string>> &sear
 
     const std::string jx9_script =
         "$zCol = '" + std::string(SEARCH_DATA_SCHEMA) + "';"
-                                                        "if (db_exists($zCol)) {"
-                                                        "   print \"search collection already exists\";"
-                                                        "   return;"
-                                                        "}"
-                                                        "$rc = db_create($zCol);"
-                                                        "if ( !$rc ){"
-                                                        "   print db_errlog();"
-                                                        "   return;"
-                                                        "}"
-                                                        "$insert=function($value, $key){"
-                                                        "   $data = {'" +
-        RECORD_KEY + "':$key, '" + RECORD_VALUE + "' : $value};"
-                                                  "   $rc = db_store('" +
-        SEARCH_DATA_SCHEMA + "', $data);"
-                             "   if (!$rc){"
-                             "       print db_errlog();"
-                             "   }"
-                             "   print $data;"
-                             "};"
-                             "array_walk($" +
-        SEARCH_DATA_VAR_NAME + ", $insert);";
+        "if (db_exists($zCol)) {"
+        "   print \"collection already exists\";"
+        "   return;"
+        "}"
+        "$rc = db_create($zCol);"
+        "if ( !$rc ){"
+        "   print db_errlog();"
+        "   return;"
+        "}"
+        "$insert=function($value, $key){"
+        "   $data = {'" +RECORD_KEY + "':$key, '" + RECORD_VALUE + "' : $value};"
+        "   $rc = db_store('" +SEARCH_DATA_SCHEMA + "', $data);"
+        "   if (!$rc){"
+        "       print db_errlog();"
+        "   }"
+        "};"
+        "array_walk($" + SEARCH_DATA_VAR_NAME + ", $insert);";
 
     if (unqlite_compile(pDb, jx9_script.c_str(), jx9_script.size(), &pVm) != UNQLITE_OK)
     {
@@ -70,9 +66,10 @@ void create_database(const std::map<std::string, std::vector<std::string>> &sear
     unqlite_value *insertion_data = get_unqlite_array(searching_data, pVm);
     if (unqlite_vm_config(pVm, UNQLITE_VM_CONFIG_CREATE_VAR, SEARCH_DATA_VAR_NAME, insertion_data) != UNQLITE_OK)
     {
-        fatal(0, "Error while installing data");
+        fatal(0, "error while installing data");
     }
     unqlite_vm_exec(pVm);
+    unqlite_vm_release_value(pVm, insertion_data);
     unqlite_vm_release(pVm);
     unqlite_close(pDb);
 }
@@ -87,7 +84,7 @@ std::map<std::string, std::vector<std::string>> get_searching_data()
     {
         fatal(0, "out of memory");
     }
-    const std::string jx9_script = "$" + std::string(SEARCH_DATA_VAR_NAME) + "=db_fetch_all('" + std::string(SEARCH_DATA_SCHEMA) + "');";
+    const std::string jx9_script = "$" + std::string(SEARCH_DATA_VAR_NAME) + " = db_fetch_all('" + std::string(SEARCH_DATA_SCHEMA) + "');";
     if (unqlite_compile(pDb, jx9_script.c_str(), jx9_script.size(), &pVm) != UNQLITE_OK)
     {
         handle_jx9_compilation_error(pDb);
@@ -101,12 +98,12 @@ std::map<std::string, std::vector<std::string>> get_searching_data()
     unqlite_close(pDb);
     return result;
 }
-static unqlite_value *get_unqlite_array(const std::map<std::string, std::vector<std::string>> &searching_data, unqlite_vm *pVm)
+static unqlite_value *get_unqlite_array(const std::map<std::string, std::vector<std::string>> &map, unqlite_vm *pVm)
 {
-    unqlite_value *map;
-    map = unqlite_vm_new_array(pVm);
+    unqlite_value *result;
+    result = unqlite_vm_new_array(pVm);
 
-    for (const auto &element : searching_data)
+    for (const auto &element : map)
     {
         unqlite_value *value;
         unqlite_value *array_key;
@@ -125,23 +122,27 @@ static unqlite_value *get_unqlite_array(const std::map<std::string, std::vector<
             unqlite_vm_release_value(pVm, temp_array_value);
         }
 
-        unqlite_array_add_elem(map, array_key, value);
+        unqlite_array_add_elem(result, array_key, value);
         unqlite_vm_release_value(pVm, value);
         unqlite_vm_release_value(pVm, array_key);
     }
-    return map;
+    return result;
 }
 
 static int append_record_to_map(unqlite_value *pKey, unqlite_value *pData, void *pUserData)
 {
-    unqlite_value *product = unqlite_array_fetch(pData, RECORD_KEY, sizeof(RECORD_KEY) - 1);
-    std::string product_name = std::string(unqlite_value_to_string(product, NULL));
-    unqlite_value *languages = unqlite_array_fetch(pData, RECORD_VALUE, sizeof(RECORD_VALUE) - 1);
-    std::vector<std::string> languages_vec;
-    unqlite_array_walk(languages, append_string_to_vector, static_cast<void *>(&languages_vec));
+    unqlite_value *key = unqlite_array_fetch(pData, RECORD_KEY, sizeof(RECORD_KEY) - 1);
+    std::string key_name = std::string(unqlite_value_to_string(key, NULL));
+    unqlite_value *value = unqlite_array_fetch(pData, RECORD_VALUE, sizeof(RECORD_VALUE) - 1);
+    std::vector<std::string> value_vector;
+    unqlite_array_walk(value, append_string_to_vector, static_cast<void *>(&value_vector));
     std::map<std::string, std::vector<std::string>> *map = static_cast<std::map<std::string, std::vector<std::string>> *>(pUserData);
 
-    map->insert(std::make_pair(product_name, languages_vec));
+    map->insert(std::make_pair(key_name, value_vector));
+
+    unqlite_value_release(key);
+    unqlite_value_release(value);
+
     return UNQLITE_OK;
 }
 
