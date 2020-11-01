@@ -8,7 +8,12 @@ Value MapTable<Row, Column, Value>::get_value(const Row &row, const Column &colu
 
 template <typename Row, typename Column, typename Value>
 void MapTable<Row, Column, Value>::set_value(const Row &row, const Column &column, Value value) {
-    m_map.insert(std::make_pair(std::make_pair(row, column), value));
+    if (m_map.find(std::make_pair(row,column))==m_map.end()) {
+        m_map.insert(std::make_pair(std::make_pair(row, column), value));
+    }
+    else{
+        m_map.at(std::make_pair(row,column))=value;
+    }
 }
 
 template <typename Row, typename Column, typename Value>

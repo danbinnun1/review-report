@@ -10,6 +10,7 @@
 #define RATING_DATA_VAR_NAME "data"
 #define DATA_KEY_NAME "data"
 
+
 static int append_record_to_vector(unqlite_value *pKey, unqlite_value *pData, void *pUserData);
 
 std::unique_ptr<history_reports_data> get_past_data()
@@ -55,6 +56,7 @@ std::unique_ptr<history_reports_data> get_past_data()
                     result->set_value(row,col,{});
                 }
                 auto vec=result->get_value(row,col);
+
                 vec.push_back(record.get_value(row,col));
                 result->set_value(row,col,vec);
  
@@ -145,18 +147,22 @@ typedef struct {
     MapTable<std::string,std::string,std::string>* table;
 } language_data;
 
+
 static int append_language_to_map(unqlite_value *pKey, unqlite_value *pData, void *pUserData){
+
     language_data* lang_data=static_cast<language_data*>(pUserData);
+    
     lang_data->table->set_value(lang_data->product_name,std::string(unqlite_value_to_string(pKey,NULL)),std::string(unqlite_value_to_string(pData,NULL)));
     return UNQLITE_OK;
 }
 
 static int append_product_to_map(unqlite_value *pKey, unqlite_value *pData, void *pUserData){
-    unqlite_value *data = unqlite_array_fetch(pData, DATA_KEY_NAME, sizeof(DATA_KEY_NAME) - 1);
     language_data lang_data;
     lang_data.product_name=std::string(unqlite_value_to_string(pKey,NULL));
+
     lang_data.table=static_cast<MapTable<std::string,std::string,std::string>*>(pUserData);
-    unqlite_array_walk(data, append_language_to_map, static_cast<void *>(&lang_data));
+
+    unqlite_array_walk(pData, append_language_to_map, static_cast<void *>(&lang_data));
 
     return UNQLITE_OK;
 }
@@ -165,6 +171,7 @@ static int append_record_to_vector(unqlite_value *pKey, unqlite_value *pData, vo
     unqlite_value *data = unqlite_array_fetch(pData, DATA_KEY_NAME, sizeof(DATA_KEY_NAME) - 1);
     MapTable<std::string,std::string,std::string> table;
     unqlite_array_walk(data, append_product_to_map, static_cast<void *>(&table));
+
     std::vector<MapTable<std::string,std::string,std::string>>* tables=static_cast<std::vector<MapTable<std::string,std::string,std::string>>*>(pUserData);
     tables->push_back(table);
 
