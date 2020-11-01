@@ -64,7 +64,16 @@ static unqlite_value *get_unqlite_table(const report_data &data, unqlite_vm* pVm
     for (const std::string &product:products){
         unqlite_value* product_data=unqlite_vm_new_array(pVm);
         for (const std::string& language:languages){
-            const std::string string_value=data.get_value(product,language);
+            std::string string_value;
+
+            //check if the value exists in the table, if it doesn't, it will throw exception
+            try{
+                string_value=data.get_value(product,language);
+            }
+            catch(std::exception& e){
+                string_value="";
+            }
+            
             unqlite_value* value;
             value = unqlite_vm_new_scalar(pVm);
             unqlite_value_string(value, string_value.c_str(),-1);
