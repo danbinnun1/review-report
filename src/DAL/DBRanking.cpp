@@ -7,6 +7,7 @@
 
 #define RATING_SCHEMA "rating"
 #define RATING_DATA_VAR_NAME "data"
+#define DATA_KEY_NAME "data"
 
 std::unique_ptr<history_reports_data> get_past_data()
 {
@@ -55,8 +56,8 @@ void insert_new_data(const report_data &data)
 
 static unqlite_value *get_unqlite_table(const report_data &data, unqlite_vm* pVm)
 {
-    unqlite_value *result;
-    result = unqlite_vm_new_array(pVm);
+    unqlite_value *result_data;
+    result_data = unqlite_vm_new_array(pVm);
 
     const auto products=data.get_rows();
     const auto languages=data.get_columns();
@@ -80,8 +81,11 @@ static unqlite_value *get_unqlite_table(const report_data &data, unqlite_vm* pVm
             unqlite_array_add_strkey_elem(product_data,language.c_str(),value);
             unqlite_vm_release_value(pVm, value);
         }
-        unqlite_array_add_strkey_elem(result,product.c_str(),product_data);
+        unqlite_array_add_strkey_elem(result_data,product.c_str(),product_data);
         unqlite_vm_release_value(pVm, product_data);
     }
+    unqlite_value* result=unqlite_vm_new_array(pVm);
+    unqlite_array_add_strkey_elem(result,DATA_KEY_NAME,result_data);
+    unqlite_vm_release_value(pVm,result_data);
     return result;
 }
