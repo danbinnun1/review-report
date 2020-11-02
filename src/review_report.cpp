@@ -25,6 +25,7 @@ void generate_review_report(const std::string &searching_data_file,
     else
     {
         searching_data = parser.get_product_languages_map(searching_data_file);
+        create_database(searching_data);
     }
     MapTable<std::string, std::string, std::vector<std::string>> links;
     for (const auto &element : searching_data)
